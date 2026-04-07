@@ -14,7 +14,10 @@ import androidx.compose.ui.unit.sp
 import com.example.infinite_scroll_app.ui.theme.InfinitescrollappTheme
 
 @Composable
-fun MainScreen(list: List<Long>, modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier) {
+    val viewModel = MainViewModel()
+    val list = viewModel.uiList
+
     LazyColumn(
         modifier = modifier.padding(start = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -22,8 +25,8 @@ fun MainScreen(list: List<Long>, modifier: Modifier = Modifier) {
         items(list.size) {
             Text(
                 text = list[it].toString(),
-                textAlign = TextAlign.Start
-                ,fontSize = 24.sp,
+                textAlign = TextAlign.Start,
+                fontSize = 24.sp,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -34,7 +37,6 @@ fun MainScreen(list: List<Long>, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     InfinitescrollappTheme {
-        val previewList = (0..100).map { it.toLong() }.toList()
-        MainScreen(list = previewList)
+        MainScreen()
     }
 }

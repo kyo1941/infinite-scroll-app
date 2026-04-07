@@ -18,9 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             InfinitescrollappTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val initialList = (0..100).map{ it.toLong() }.toList()
                     MainScreen(
-                        list = initialList,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
