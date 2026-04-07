@@ -20,7 +20,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
     LazyColumn(
         modifier = modifier.padding(start = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         items(list.size) {
             Text(
