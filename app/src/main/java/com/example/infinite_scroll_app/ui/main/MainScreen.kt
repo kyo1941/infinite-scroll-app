@@ -1,0 +1,40 @@
+package com.example.infinite_scroll_app.ui.main
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.infinite_scroll_app.ui.theme.InfinitescrollappTheme
+
+@Composable
+fun MainScreen(list: List<Long>, modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier.padding(start = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(list.size) {
+            Text(
+                text = list[it].toString(),
+                textAlign = TextAlign.Start
+                ,fontSize = 24.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    InfinitescrollappTheme {
+        val previewList = (0..100).map { it.toLong() }.toList()
+        MainScreen(list = previewList)
+    }
+}
