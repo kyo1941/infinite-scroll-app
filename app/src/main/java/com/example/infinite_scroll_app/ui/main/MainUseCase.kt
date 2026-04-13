@@ -8,7 +8,7 @@ class MainUseCase() {
      * @param limit 生成する最大値
      */
     fun makeItems(list: List<Long>, limit: Int): List<Long> {
-        val last = list.last()
+        val last = list.lastOrNull() ?: 0L
         return (last..limit).toList()
     }
 

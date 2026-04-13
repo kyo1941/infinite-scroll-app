@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class MainViewModel() : ViewModel() {
-    private val _uiList = MutableStateFlow<List<Long>>((0L..30).toList())
+    private val _uiList = MutableStateFlow<List<Long>>(emptyList())
     val uiList: StateFlow<List<Long>> = _uiList.asStateFlow()
 
     val useCase = MainUseCase()
