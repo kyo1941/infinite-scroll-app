@@ -26,9 +26,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
     val listState = rememberLazyListState()
 
     /**
-     * buffer(=20件)よりも下回った場合にページング処理を行う
+     * 下側にbuffer(=20件)よりも下回った場合にページング処理を行う
      */
-    val isRequiredMoreLoad = remember {
+    val isRequiredMoreLoadAfter = remember {
         derivedStateOf {
             val buffer = 20
             val lastVisibleIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
@@ -40,9 +40,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
      * ページング処理の発火点
      * NOTE: SnapshotFlowを使うとcollectで発火できるので楽そうでした
      */
-    LaunchedEffect(isRequiredMoreLoad.value) {
-        if (isRequiredMoreLoad.value) {
-            viewModel.reload(list.value.size + 30)
+    LaunchedEffect(isRequiredMoreLoadAfter.value) {
+        if (isRequiredMoreLoadAfter.value) {
+            viewModel.loadAfter(list.value.size + 30)
         }
     }
 

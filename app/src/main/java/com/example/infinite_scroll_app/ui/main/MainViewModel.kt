@@ -17,7 +17,7 @@ class MainViewModel() : ViewModel() {
      *
      * @param limit ページングで追加する値
      */
-    fun reload(limit: Int) {
+    fun loadAfter(limit: Int) {
         val addList = useCase.makeItems(_uiList.value, limit)
         _uiList.update {
             useCase.addItems(it, addList)
