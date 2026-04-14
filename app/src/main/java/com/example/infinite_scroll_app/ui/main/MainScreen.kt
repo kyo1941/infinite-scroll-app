@@ -42,7 +42,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
      */
     LaunchedEffect(isRequiredMoreLoadAfter.value) {
         if (isRequiredMoreLoadAfter.value) {
-            viewModel.loadAfter(list.value.size + 30)
+            viewModel.loadAfter(30)
         }
     }
 

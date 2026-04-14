@@ -9,7 +9,7 @@ class MainUseCase() {
      */
     fun makeItems(list: List<Long>, limit: Int): List<Long> {
         val last = list.lastOrNull() ?: 0L
-        return (last..limit).toList()
+        return (last..last + limit).toList()
     }
 
     /**
