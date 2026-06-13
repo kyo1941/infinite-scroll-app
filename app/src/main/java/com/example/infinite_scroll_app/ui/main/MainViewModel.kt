@@ -18,9 +18,25 @@ class MainViewModel() : ViewModel() {
      * @param limit ページングで追加する値
      */
     fun loadAfter(limit: Int) {
-        val addList = useCase.makeItems(_uiList.value, limit)
+        val addList = useCase.makeItemsAfter(_uiList.value, limit)
         _uiList.update {
-            useCase.addItems(it, addList)
+            useCase.addItemsAfter(it, addList)
+        }
+    }
+
+    /**
+     * 上向きページング処理
+     *
+     * リストの先頭に新しい連番を prepend する。prepend は既存要素のインデックスを
+     * ずらすが、スクロール位置の保持は LazyColumn のアイテムキーによる自動アンカリングに任せる。
+     *
+     * @param limit ページングで先頭に追加する個数
+     */
+    fun loadBefore(limit: Int) {
+        if (_uiList.value.isEmpty()) return
+        val addList = useCase.makeItemsBefore(_uiList.value, limit)
+        _uiList.update {
+            useCase.addItemsBefore(it, addList)
         }
     }
 }

@@ -37,6 +37,18 @@ fun MainScreen(modifier: Modifier = Modifier) {
     }
 
     /**
+     * 上側にbuffer(=20件)よりも近づいた場合に上向きページング処理を行う
+     * NOTE: 上端はインデックス0で固定なので、先頭可視インデックスそのものが先頭からの距離になる
+     */
+    val isRequiredMoreLoadBefore = remember {
+        derivedStateOf {
+            val buffer = 20
+            val firstVisibleIndex = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+            list.value.isNotEmpty() && firstVisibleIndex <= buffer
+        }
+    }
+
+    /**
      * ページング処理の発火点
      * NOTE: SnapshotFlowを使うとcollectで発火できるので楽そうでした
      */
@@ -46,12 +58,26 @@ fun MainScreen(modifier: Modifier = Modifier) {
         }
     }
 
+    /**
+     * 上向きページング処理の発火点
+     * prepend は既存要素のインデックスを後ろへずらすが、items に一意なキーを与えているため
+     * LazyColumn が「先頭に見えている要素」をキーで追跡してスクロール位置を自動保持する
+     */
+    LaunchedEffect(isRequiredMoreLoadBefore.value) {
+        if (isRequiredMoreLoadBefore.value) {
+            viewModel.loadBefore(30)
+        }
+    }
+
     LazyColumn(
         modifier = modifier.padding(start = 8.dp),
         state = listState,
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        items(list.value.size) {
+        items(
+            count = list.value.size,
+            key = { index -> list.value[index] },
+        ) {
             Text(
                 text = list.value[it].toString(),
                 textAlign = TextAlign.Start,
