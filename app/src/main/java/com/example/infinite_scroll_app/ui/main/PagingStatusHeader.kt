@@ -18,13 +18,15 @@ import androidx.compose.ui.unit.sp
 @Composable
 internal fun PagingStatusHeader(
     itemCount: Int,
-    visibleStart: Long?,
-    visibleEnd: Long?,
+    visibleStart: () -> Long?,
+    visibleEnd: () -> Long?,
 ) {
-    val visibleRange = if (visibleStart == null || visibleEnd == null) {
+    val start = visibleStart()
+    val end = visibleEnd()
+    val visibleRange = if (start == null || end == null) {
         "loading"
     } else {
-        "$visibleStart .. $visibleEnd"
+        "$start .. $end"
     }
 
     Column(

@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,8 +23,9 @@ import com.example.infinite_scroll_app.ui.theme.InfinitescrollappTheme
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = viewModel()
-    val list by viewModel.uiList.collectAsState()
-    val listState = rememberLazyListState()
+    val uiListState = viewModel.uiList.collectAsState()
+    val list = uiListState.value
+    val lazyListState = rememberLazyListState()
 
     /**
      * 下側にbuffer(=20件)よりも下回った場合にページング処理を行う
@@ -33,8 +33,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
     val isRequiredMoreLoadAfter = remember {
         derivedStateOf {
             val buffer = 20
-            val lastVisibleIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            list.size - lastVisibleIndex <= buffer
+            val lastVisibleIndex = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            uiListState.value.size - lastVisibleIndex <= buffer
         }
     }
 
@@ -45,14 +45,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
     val isRequiredMoreLoadBefore = remember {
         derivedStateOf {
             val buffer = 20
-            val firstVisibleIndex = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
-            list.isNotEmpty() && firstVisibleIndex <= buffer
+            val firstVisibleIndex = lazyListState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+            uiListState.value.isNotEmpty() && firstVisibleIndex <= buffer
         }
     }
 
     val visibleRange = remember {
         derivedStateOf {
-            val visibleItems = listState.layoutInfo.visibleItemsInfo
+            val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
             if (visibleItems.isEmpty()) {
                 null
             } else {
@@ -89,15 +89,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
     ) {
         PagingStatusHeader(
             itemCount = list.size,
-            visibleStart = visibleRange.value?.first?.let { list.getOrNull(it) },
-            visibleEnd = visibleRange.value?.second?.let { list.getOrNull(it) },
+            visibleStart = { visibleRange.value?.first?.let { list.getOrNull(it) } },
+            visibleEnd = { visibleRange.value?.second?.let { list.getOrNull(it) } },
         )
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            state = listState,
+            state = lazyListState,
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
